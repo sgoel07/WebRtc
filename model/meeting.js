@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const meetingSchema = mongoose.Schema({
-    date:{type:Date},
+    date:{type:String},
     time:{type:String},
     createrId:{type:String},
     senderId:{type:String},
