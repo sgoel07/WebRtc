@@ -1,7 +1,8 @@
 // app.js
 
 var VideoChat = {
-  socket: io(),
+  // socket: io.connect('https://2a33-49-249-66-182.ngrok-free.app'), 
+  socket:io(),
   requestMediaStream: function (event) {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
@@ -41,7 +42,7 @@ var VideoChat = {
 
   // onToken: function(token){
   onToken: function (callback) {
-    return function (token) {
+    return async function (token) {
       VideoChat.peerConnection = new RTCPeerConnection({
         iceServers: token.iceServers
       });
@@ -52,33 +53,44 @@ var VideoChat = {
       VideoChat.socket.on('candidate', VideoChat.onCandidate);
       VideoChat.socket.on('answer', VideoChat.onAnswer);
       callback();
+      
+      
 
       // VideoChat.peerConnection.addStream(VideoChat.localStream);
-      VideoChat.localStream.getTracks().forEach(function (track) {
-        console.log("hi local stream", track)
-        VideoChat.peerConnection.addTrack(track, VideoChat.localStream);
-      });
+     
+      // VideoChat.localStream.addTrack(medias.getTracks()[0])
+      // VideoChat.localStream.addTrack(medias.getTracks()[0])
+
+      // VideoChat.localStream.getTracks().forEach(function (track) {
+      //   console.log("hi local stream", track)
+      //   VideoChat.peerConnection.addTrack(track, VideoChat.localStream);
+      // });
+
+      // for (const track of VideoChat.localStream.getTracks()) {
+      //   console.log(track,"Check track values")
+      //   VideoChat.peerConnection.addTrack(track)
+      // }
 
 
-      VideoChat.peerConnection.createOffer(
-        function (offer) {
-          console.log("Offer", offer.sdp)
-          // VideoChat.peerConnection.setLocalDescription(offer)
-          VideoChat.peerConnection.setLocalDescription(offer)
-            .then((off) => {
-              // Local description successfully set
-              console.log('Local description successfully set',off);
-            })
-            .catch((error) => {
-              // Failed to set local description
-              console.error('Error setting local description:', error);
-            });
-          VideoChat.socket.emit('offer', JSON.stringify(offer));
-        },
-        function (err) {
-          console.log(err, "offer");
-        }
-      );
+      // VideoChat.peerConnection.createOffer(
+      //   function (offer) {
+      //     console.log("Offer", offer.sdp)
+      //     // VideoChat.peerConnection.setLocalDescription(offer)
+      //     VideoChat.peerConnection.setLocalDescription(offer)
+      //       .then((off) => {
+      //         // Local description successfully set
+      //         console.log('Local description successfully set',off);
+      //       })
+      //       .catch((error) => {
+      //         // Failed to set local description
+      //         console.error('Error setting local description:', error);
+      //       });
+      //     VideoChat.socket.emit('offer', JSON.stringify(offer));
+      //   },
+      //   function (err) {
+      //     console.log(err, "offer");
+      //   }
+      // );
     }
   },
 
@@ -92,10 +104,11 @@ var VideoChat = {
     let rtcCandidate = new RTCIceCandidate(JSON.parse(candidate));
     VideoChat.peerConnection.addIceCandidate(rtcCandidate);
   },
+   
   createOffer: function () {
     VideoChat.peerConnection.createOffer(
-      function (offer) {
-        console.log(VideoChat.peerConnection.setLocalDescription(offer), "Check offer")
+     async function (offer) {
+        console.log( VideoChat.peerConnection.setLocalDescription(offer), "Check offer")
         VideoChat.peerConnection.setLocalDescription(offer);
         VideoChat.socket.emit('offer', JSON.stringify(offer));
       },
@@ -104,6 +117,20 @@ var VideoChat = {
       }
     );
   },
+
+  // createOffer: function () {
+  //   VideoChat.peerConnection.createOffer()
+  //     .then(function (offer) {
+  //       console.log("Offer created:", offer);
+  //       console.log(VideoChat.peerConnection.setLocalDescription(JSON.parse(offer)), "Check offer");
+  //       VideoChat.peerConnection.setLocalDescription(offer);
+  //       VideoChat.socket.emit('offer', JSON.stringify(offer));
+  //     })
+  //     .catch(function (err) {
+  //       console.log(err, "Error in create offer function");
+  //     });
+  // },
+  
 
   createAnswer: function (offer) {
     return function () {
