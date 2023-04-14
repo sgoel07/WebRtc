@@ -1,7 +1,29 @@
 const Meeting = require('../model/meeting');
 const catchAsyncAwait = require('../middleware/catchAsyncAwait');
 const socket = require('../socket')
+const User = require('../model/user')
 
+exports.createUser = catchAsyncAwait(async(req,res)=>{
+    const {name,type,userId} = req.body
+    try {
+        let data = await User.create({
+            name:name,
+            type:type,
+            userId:userId
+        });
+        res.status(200).send({
+            date: data,
+            code: 200,
+            status: "SUCCESS"
+        })
+    } catch (error) {
+        res.status(400).send({
+            error: error,
+            code: 400,
+            status: "Error"
+        })
+    }
+})
 
 exports.scheduleMeeting = catchAsyncAwait(async (req, res) => {
     const { date, time, senderId, createrId, title } = req.body
