@@ -48,7 +48,7 @@ io.on('connection', function(socket){
       date: room.date,
       time: room.time,
       title: room.title,
-      // senderId: senderId,
+      inviteId: room.inviteId,
       creatorId: room.creatorId
   });
 
