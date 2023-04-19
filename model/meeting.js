@@ -5,7 +5,8 @@ const meetingSchema = mongoose.Schema({
     time:{type:String},
     creatorId:{type:String},
     senderId:{type:String},
-    title:{type:String}
+    title:{type:String},
+    meetingLink:{type:String}
 })
 
 module.exports = mongoose.model('Meeting',meetingSchema)
