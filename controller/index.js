@@ -4,7 +4,8 @@ const socket = require('../socket')
 const User = require('../model/user');
 const {jwtSign} = require('../utils/token');
 const Token = require('../model/token');
-const path = require('path')
+const path = require('path');
+const localtunnel = require('localtunnel');
 
 
 exports.createUser = catchAsyncAwait(async(req,res)=>{
@@ -12,7 +13,8 @@ exports.createUser = catchAsyncAwait(async(req,res)=>{
     try {
         let data = await User.create({
             name:name,
-            type:type,
+            email:email,
+            password:password,
             userId:userId
         });
         const token = jwtSign({ _id: data._id, name: User.data });
@@ -42,6 +44,9 @@ exports.scheduleMeeting = catchAsyncAwait(async (req, res) => {
         let token = await Token.find({userId:creatorId});
         let userExists = await User.find({_id:senderId});
         console.log(userExists,"Check user exists or not")
+        const tunnel = await localtunnel({ port: 4000 });
+        tunnel.url;
+        console.log(tunnel.url,"Check tunnel value")
         if(userExists.length ==1){
             data = await Meeting.create({
                 date: date,
@@ -50,7 +55,8 @@ exports.scheduleMeeting = catchAsyncAwait(async (req, res) => {
                 senderId: senderId,
                 creatorId: creatorId,
                 // meetingLink:`http://${req.headers.host}/webrtc/v1/joinMeeting/${encodeURIComponent(token[0].token)}`
-                meetingLink:`https://08fd-49-249-66-182.ngrok-free.app`
+                // meetingLink:`https://08fd-49-249-66-182.ngrok-free.app`
+                meetingLink:tunnel.url
             });
         }
         else{
