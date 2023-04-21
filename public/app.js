@@ -178,7 +178,7 @@ var VideoChat = {
 };
 
 
-VideoChat.videoButton = document.getElementById('http://10.20.1.91:7000/webrtc/v1/meetingLink/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY0NDIyNmUyNjM4OGU3NzMyMGIyOTEyNyJ9LCJleHAiOjE2ODQ2NDg5MzEsImlhdCI6MTY4MjA1NjkzMX0.Jpx_S0GOUN0HjtgvaLM5FdlenTfECk1OxxvXlKdkAfg');
+VideoChat.videoButton = document.getElementById('get-video');
 
 VideoChat.videoButton.addEventListener(
   'click',
@@ -187,7 +187,7 @@ VideoChat.videoButton.addEventListener(
 );
 
 
-VideoChat.callButton = document.getElementById('http://10.20.1.91:7000/webrtc/v1/meetingLink/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY0NDIyNmUyNjM4OGU3NzMyMGIyOTEyNyJ9LCJleHAiOjE2ODQ2NDg5MzEsImlhdCI6MTY4MjA1NjkzMX0.Jpx_S0GOUN0HjtgvaLM5FdlenTfECk1OxxvXlKdkAfg');
+VideoChat.callButton = document.getElementById('call');
 
 VideoChat.callButton.addEventListener(
   'click',

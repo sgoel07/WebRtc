@@ -3,7 +3,9 @@ const catchAsyncAwait = require('../middleware/catchAsyncAwait');
 const socket = require('../socket')
 const User = require('../model/user');
 const {jwtSign} = require('../utils/token');
-const Token = require('../model/token')
+const Token = require('../model/token');
+const path = require('path')
+
 
 exports.createUser = catchAsyncAwait(async(req,res)=>{
     const {name,type,userId} = req.body
@@ -122,11 +124,13 @@ exports.joinMeeting = async(req,res)=>{
     try {
         let data = await Meeting.find({meetingLink:meetingLink});
         console.log(data)
-        res.status(200).send({
-            message:"Meeting join Successfully.",
-            code: 200,
-            status: "SUCCESS"
-        })
+        // res.sendFile('../public/index.html', {root: __dirname })
+        res.sendFile(path.resolve('public/index.html'));
+        // res.status(200).send({
+        //     message:"Meeting join Successfully.",
+        //     code: 200,
+        //     status: "SUCCESS"
+        // })
     } catch (error) {
         console.log(error,"Error")
         res.status(400).send({
