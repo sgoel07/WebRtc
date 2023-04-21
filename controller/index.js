@@ -34,27 +34,38 @@ exports.createUser = catchAsyncAwait(async(req,res)=>{
 })
 
 exports.scheduleMeeting = catchAsyncAwait(async (req, res) => {
-    const { date, time, senderId, createrId, title } = req.body
+    const creatorId =  req.params.id
+    const { date, time, senderId, title } = req.body
     try {
-        let token = await Token.find({userId:createrId});
-        console.log(token,"Check token")
-        let data = await Meeting.create({
-            date: date,
-            time: time,
-            title: title,
-            senderId: senderId,
-            createrId: createrId,
-            meetingLink:`http://${req.headers.host}/webrtc/v1/meetingLink/${encodeURIComponent(token[0].token)}`
-        });
+        let data;
+        let token = await Token.find({userId:creatorId});
+        let userExists = await User.find({_id:senderId});
+        console.log(userExists,"Check user exists or not")
+        if(userExists.length ==1){
+            data = await Meeting.create({
+                date: date,
+                time: time,
+                title: title,
+                senderId: senderId,
+                creatorId: creatorId,
+                meetingLink:`http://${req.headers.host}/webrtc/v1/joinMeeting/${encodeURIComponent(token[0].token)}`
+            });
+        }
+        else{
+            console.log("id does not exits")
+        }
+       
         res.status(200).send({
             data: data,
             code: 200,
+            // message:"Meeting created Successfully.",
             status: "SUCCESS"
         })
     } catch (error) {
-        console.log(error, "Error")
+        // console.log(error, "Error")
         res.status(400).send({
-            error: error,
+            // error: error.message,
+            error:"This sender id does not exits",
             code: 400,
             status: "Error"
         })
@@ -63,18 +74,19 @@ exports.scheduleMeeting = catchAsyncAwait(async (req, res) => {
 
 
 exports.updateMeeting = catchAsyncAwait(async (req, res) => {
-    const createrId = req.params.id
+    const creatorId = req.params.id
     const { date, time } = req.body
     try {
         await Meeting.updateOne(
-            { createrId: createrId },
+            { _id: creatorId },
             { $set: { date: date, time: time } },
             { new: true }
         )
-        let updatedData = await Meeting.find({ createrId: createrId })
+        let updatedData = await Meeting.find({ _id: creatorId })
         res.status(200).send({
             date: updatedData,
             code: 200,
+            message:"Meeting updated Successfully",
             status: "SUCCESS"
         })
     } catch (error) {
@@ -88,10 +100,11 @@ exports.updateMeeting = catchAsyncAwait(async (req, res) => {
 });
 
 exports.deleteMeeting = catchAsyncAwait(async (req, res) => {
-    const createrId = req.params.id
+    const creatorId = req.params.id
     try {
-        await Meeting.findOneAndDelete({ createrId: createrId })
+        await Meeting.findOneAndDelete({ _id: creatorId })
         res.status(200).send({
+            message:"Meeting deleted Successfully.",
             code: 200,
             status: "SUCCESS"
         })
@@ -103,3 +116,23 @@ exports.deleteMeeting = catchAsyncAwait(async (req, res) => {
         })
     }
 })
+
+exports.joinMeeting = async(req,res)=>{
+    const meetingLink = req.params.meetingLink
+    try {
+        let data = await Meeting.find({meetingLink:meetingLink});
+        console.log(data)
+        res.status(200).send({
+            message:"Meeting join Successfully.",
+            code: 200,
+            status: "SUCCESS"
+        })
+    } catch (error) {
+        console.log(error,"Error")
+        res.status(400).send({
+            error: error.message,
+            code: 400,
+            status: "Error"
+        })
+    }
+}
