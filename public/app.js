@@ -47,6 +47,7 @@ var VideoChat = {
         iceServers: token.iceServers
       });
 
+     
       VideoChat.peerConnection.addStream(VideoChat.localStream);
       VideoChat.peerConnection.onicecandidate = VideoChat.onIceCandidate;
       VideoChat.peerConnection.onaddstream = VideoChat.onAddStream;
@@ -66,31 +67,31 @@ var VideoChat = {
       //   VideoChat.peerConnection.addTrack(track, VideoChat.localStream);
       // });
 
-      // for (const track of VideoChat.localStream.getTracks()) {
-      //   console.log(track,"Check track values")
-      //   VideoChat.peerConnection.addTrack(track)
-      // }
+      for (const track of VideoChat.localStream.getTracks()) {
+        console.log(track,"Check track values")
+        VideoChat.peerConnection.addTrack(track)
+      }
 
 
-      // VideoChat.peerConnection.createOffer(
-      //   function (offer) {
-      //     console.log("Offer", offer.sdp)
-      //     // VideoChat.peerConnection.setLocalDescription(offer)
-      //     VideoChat.peerConnection.setLocalDescription(offer)
-      //       .then((off) => {
-      //         // Local description successfully set
-      //         console.log('Local description successfully set',off);
-      //       })
-      //       .catch((error) => {
-      //         // Failed to set local description
-      //         console.error('Error setting local description:', error);
-      //       });
-      //     VideoChat.socket.emit('offer', JSON.stringify(offer));
-      //   },
-      //   function (err) {
-      //     console.log(err, "offer");
-      //   }
-      // );
+      VideoChat.peerConnection.createOffer(
+        function (offer) {
+          console.log("Offer", offer.sdp)
+          // VideoChat.peerConnection.setLocalDescription(offer)
+          VideoChat.peerConnection.setLocalDescription(offer)
+            .then((off) => {
+              // Local description successfully set
+              console.log('Local description successfully set',off);
+            })
+            .catch((error) => {
+              // Failed to set local description
+              console.error('Error setting local description:', error);
+            });
+          VideoChat.socket.emit('offer', JSON.stringify(offer));
+        },
+        function (err) {
+          console.log(err, "offer");
+        }
+      );
     }
   },
 
@@ -117,20 +118,6 @@ var VideoChat = {
       }
     );
   },
-
-  // createOffer: function () {
-  //   VideoChat.peerConnection.createOffer()
-  //     .then(function (offer) {
-  //       console.log("Offer created:", offer);
-  //       console.log(VideoChat.peerConnection.setLocalDescription(JSON.parse(offer)), "Check offer");
-  //       VideoChat.peerConnection.setLocalDescription(offer);
-  //       VideoChat.socket.emit('offer', JSON.stringify(offer));
-  //     })
-  //     .catch(function (err) {
-  //       console.log(err, "Error in create offer function");
-  //     });
-  // },
-  
 
   createAnswer: function (offer) {
     return function () {

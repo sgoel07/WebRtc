@@ -8,7 +8,7 @@ const path = require('path')
 
 
 exports.createUser = catchAsyncAwait(async(req,res)=>{
-    const {name,type,userId} = req.body
+    const {name,email,password,userId} = req.body
     try {
         let data = await User.create({
             name:name,
@@ -36,8 +36,7 @@ exports.createUser = catchAsyncAwait(async(req,res)=>{
 })
 
 exports.scheduleMeeting = catchAsyncAwait(async (req, res) => {
-    const creatorId =  req.params.id
-    const { date, time, senderId, title } = req.body
+    const { date, time, senderId, title ,creatorId} = req.body
     try {
         let data;
         let token = await Token.find({userId:creatorId});
@@ -50,7 +49,8 @@ exports.scheduleMeeting = catchAsyncAwait(async (req, res) => {
                 title: title,
                 senderId: senderId,
                 creatorId: creatorId,
-                meetingLink:`http://${req.headers.host}/webrtc/v1/joinMeeting/${encodeURIComponent(token[0].token)}`
+                // meetingLink:`http://${req.headers.host}/webrtc/v1/joinMeeting/${encodeURIComponent(token[0].token)}`
+                meetingLink:`https://08fd-49-249-66-182.ngrok-free.app`
             });
         }
         else{
@@ -120,12 +120,17 @@ exports.deleteMeeting = catchAsyncAwait(async (req, res) => {
 })
 
 exports.joinMeeting = async(req,res)=>{
-    const meetingLink = req.params.meetingLink
+    // const meetingLink = req.params.meetingLink
     try {
-        let data = await Meeting.find({meetingLink:meetingLink});
-        console.log(data)
-        // res.sendFile('../public/index.html', {root: __dirname })
-        res.sendFile(path.resolve('public/index.html'));
+        // let data = await Meeting.find({meetingLink:meetingLink});
+        const token = await Token.findOne({
+            token: decodeURIComponent(req.params.hash),
+            type: "reset",
+          });
+          console.log(token)
+       
+        res.sendFile(path.resolve('./public/index.html'));
+       
         // res.status(200).send({
         //     message:"Meeting join Successfully.",
         //     code: 200,
