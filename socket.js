@@ -12,10 +12,10 @@ const User = require('./model/user')
 // var http = require('http').createServer(app);
 // var io = require('socket.io')(http);
 
-var twilio = require('twilio')(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
+// var twilio = require('twilio')(
+//   process.env.TWILIO_ACCOUNT_SID,
+//   process.env.TWILIO_AUTH_TOKEN
+// );
 
 
 app.use(express.static(path.resolve(__dirname, 'public')));
