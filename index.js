@@ -14,7 +14,7 @@ const path = require('path')
 const socketio = require('socket.io');
 const ngrok = require('ngrok');
 
-
+let PORT=process.env.PORT || 8000
 
 
 app.use(express.urlencoded({extended: false}));
@@ -25,14 +25,14 @@ app.set('view engine', 'hbs');
 app.use('/webRtc/v1',require('./routers/index'))
 
 
-const server = app.listen(7000, () => {
+const server = app.listen(process.env.PORT, () => {
     console.log('Server running!')
    
 });
 
 var twilio = require('twilio')(
-    'AC1971cbb562e629b578a1f8651d2fd121',
-    'ca92af30ab40fc5e4387e37dea232b8a'
+    process.env.TWILIO_ACCOUNT_SID,
+    process.env.TWILIO_AUTH_TOKEN
   );
   
   
