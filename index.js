@@ -7,19 +7,10 @@ const cors = require('cors')
 const Meeting = require('./model/meeting')
 const User = require('./model/user')
 const path = require('path')
-const { exec } = require("child_process");
-exec("node -v", (error, stdout, stderr) => {
-    if (error) {
-        console.log(`error: ${error.message}`);
-        return;
-    }
-    if (stderr) {
-        console.log(`stderr: ${stderr}`);
-        return;
-    }
-    console.log(`stdout: ${stdout}`);
-});
-return
+
+
+
+
 const socketio = require('socket.io');
 const ngrok = require('ngrok');
 

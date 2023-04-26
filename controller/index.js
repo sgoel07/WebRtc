@@ -50,10 +50,11 @@ exports.scheduleMeeting = catchAsyncAwait(async (req, res) => {
         let userExists = await User.find({_id:senderId});
         console.log(userExists,"Check user exists or not");
 
-        let tunnel = await localtunnel({ port: 4000});
-        tunnel.url;
-        console.log(tunnel.url,"Check tunnel value")
+        // let tunnel = await localtunnel({ port: 4000});
+        // tunnel.url;
+        // console.log(tunnel.url,"Check tunnel value")
 
+        let baseURL ='https://web-rtc-git-master-sgoel07.vercel.app/'
         if(userExists.length ==1){
             data = await Meeting.create({
                 date: date,
@@ -61,9 +62,9 @@ exports.scheduleMeeting = catchAsyncAwait(async (req, res) => {
                 title: title,
                 senderId: senderId,
                 creatorId: creatorId,
-                // meetingLink:`http://${req.headers.host}/webrtc/v1/joinMeeting/${encodeURIComponent(token[0].token)}`
+                meetingLink:`http://${req.headers.host}/webrtc/v1/${encodeURIComponent(token[0].token)}`
                 // meetingLink:`https://08fd-49-249-66-182.ngrok-free.app`
-                meetingLink:tunnel.url
+                // meetingLink:`${baseURL}/${encodeURIComponent(token[0].token)}`
             });
         }
         else{

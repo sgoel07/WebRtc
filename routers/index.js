@@ -7,7 +7,7 @@ router.post('/createUser',index.createUser)
 router.post('/scheduleMeeting',index.scheduleMeeting);
 router.post('/updateMeeting/:id',index.updateMeeting);
 router.post('/deleteMeeting/:id',index.deleteMeeting);
-router.get('/joinMeeting',index.joinMeeting)
+router.get('joinMeeting/:hash',index.joinMeeting)
 
 //create socket room 
 router.post('/createRoom',socket.createRoom)
