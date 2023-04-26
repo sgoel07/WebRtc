@@ -6,7 +6,10 @@ const {jwtSign} = require('../utils/token');
 const Token = require('../model/token');
 const path = require('path');
 const localtunnel = require('localtunnel');
+// const ngrok = require('ngrok');
 
+
+debugger;
 
 exports.createUser = catchAsyncAwait(async(req,res)=>{
     const {name,email,password,userId} = req.body
@@ -23,6 +26,7 @@ exports.createUser = catchAsyncAwait(async(req,res)=>{
             token: token,
             type: 'Invite'
           });
+          console.log(data,"Check data")
         res.status(200).send({
             date: data,
             code: 200,
@@ -37,16 +41,19 @@ exports.createUser = catchAsyncAwait(async(req,res)=>{
     }
 })
 
+
 exports.scheduleMeeting = catchAsyncAwait(async (req, res) => {
     const { date, time, senderId, title ,creatorId} = req.body
     try {
         let data;
         let token = await Token.find({userId:creatorId});
         let userExists = await User.find({_id:senderId});
-        console.log(userExists,"Check user exists or not")
-        const tunnel = await localtunnel({ port: 4000 });
+        console.log(userExists,"Check user exists or not");
+
+        let tunnel = await localtunnel({ port: 4000});
         tunnel.url;
         console.log(tunnel.url,"Check tunnel value")
+
         if(userExists.length ==1){
             data = await Meeting.create({
                 date: date,
@@ -66,11 +73,10 @@ exports.scheduleMeeting = catchAsyncAwait(async (req, res) => {
         res.status(200).send({
             data: data,
             code: 200,
-            // message:"Meeting created Successfully.",
+            message:"Meeting created Successfully.",
             status: "SUCCESS"
         })
     } catch (error) {
-        // console.log(error, "Error")
         res.status(400).send({
             // error: error.message,
             error:"This sender id does not exits",
@@ -126,9 +132,7 @@ exports.deleteMeeting = catchAsyncAwait(async (req, res) => {
 })
 
 exports.joinMeeting = async(req,res)=>{
-    // const meetingLink = req.params.meetingLink
     try {
-        // let data = await Meeting.find({meetingLink:meetingLink});
         const token = await Token.findOne({
             token: decodeURIComponent(req.params.hash),
             type: "reset",
@@ -136,12 +140,7 @@ exports.joinMeeting = async(req,res)=>{
           console.log(token)
        
         res.sendFile(path.resolve('./public/index.html'));
-       
-        // res.status(200).send({
-        //     message:"Meeting join Successfully.",
-        //     code: 200,
-        //     status: "SUCCESS"
-        // })
+      
     } catch (error) {
         console.log(error,"Error")
         res.status(400).send({
@@ -151,3 +150,4 @@ exports.joinMeeting = async(req,res)=>{
         })
     }
 }
+
