@@ -54,7 +54,7 @@ exports.scheduleMeeting = catchAsyncAwait(async (req, res) => {
         // tunnel.url;
         // console.log(tunnel.url,"Check tunnel value")
 
-        let baseURL ='https://web-rtc-git-master-sgoel07.vercel.app/'
+        let baseURL ='https://webrtc-production-70d7.up.railway.app'
         if(userExists.length ==1){
             data = await Meeting.create({
                 date: date,
@@ -62,7 +62,7 @@ exports.scheduleMeeting = catchAsyncAwait(async (req, res) => {
                 title: title,
                 senderId: senderId,
                 creatorId: creatorId,
-                meetingLink:`http://${req.headers.host}/webrtc/v1/${encodeURIComponent(token[0].token)}`
+                meetingLink:`${baseURL}/webrtc/v1/${encodeURIComponent(token[0].token)}`
                 // meetingLink:`https://08fd-49-249-66-182.ngrok-free.app`
                 // meetingLink:`${baseURL}/${encodeURIComponent(token[0].token)}`
             });
